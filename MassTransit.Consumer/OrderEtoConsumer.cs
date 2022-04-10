@@ -14,7 +14,7 @@ public class OrderEtoConsumer : IConsumer<OrderEto>
 
     public Task Consume(ConsumeContext<OrderEto> context)
     {
-        _logger.LogInformation($"消费:{JsonSerializer.Serialize(context.Message)}");
+        _logger.LogInformation($"MassTransit.Consumer.One 收到消息:{JsonSerializer.Serialize(context.Message)}");
         return Task.CompletedTask;
     }
 }

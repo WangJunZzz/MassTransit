@@ -1,31 +1,31 @@
 using MassTransit;
-using MassTransit.Producer;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddMassTransit(x =>
 {
-   
-    // 使用内存
-    //x.UsingInMemory();
-    // 使用RabbitMq
+    x.AddConsumers(typeof(Program).Assembly);
+    // x.AddConsumer<OrderEtoConsumer>(typeof(OrderEtoConsumerDefinition));
+    // x.SetKebabCaseEndpointNameFormatter();
+    //x.AddConsumer<OrderEtoConsumer, OrderEtoConsumerDefinition>();
     x.UsingRabbitMq((context, config) =>
     {
-        config.Host("rabbitmq://localhost:5672", host =>
+      
+        config.Host("rabbitmq://localhost:5672", hostconfig =>
         {
-            host.Username("admin");
-            host.Password("admin");
+            hostconfig.Username("admin");
+            hostconfig.Password("admin");
         });
+        
+        config.ConfigureEndpoints(context);
+       
     });
 });
-//builder.Services.AddHostedService<Worker>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-
 
 var app = builder.Build();
 

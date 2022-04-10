@@ -7,10 +7,23 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddMassTransit(x =>
 {
-    //x.AddConsumers(typeof(Program).Assembly);
-    x.AddConsumer<OrderEtoConsumer>(typeof(OrderEtoConsumerDefinition));
-    x.SetKebabCaseEndpointNameFormatter();
+    
+    // 通过扫描程序集注册消费者
+    x.AddConsumers(typeof(Program).Assembly);
+   
+    // 通过类型单个注册消费者
+    // x.AddConsumer<OrderEtoConsumer>(typeof(OrderEtoConsumerDefinition));
+    
+    // x.SetKebabCaseEndpointNameFormatter();
+    
+    // 通过泛型单个注册消费者
     //x.AddConsumer<OrderEtoConsumer, OrderEtoConsumerDefinition>();
+    
+    // 通过指定命名空间注册消费者
+    // x.AddConsumersFromNamespaceContaining<OrderEtoConsumer>();
+    
+    // 使用内存队列
+    // x.UsingInMemory();
     x.UsingRabbitMq((context, config) =>
     {
       
